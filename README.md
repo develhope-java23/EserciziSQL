@@ -1,6 +1,7 @@
 # Esercizi SQL
 ## Esercizio 1
 - Creare una tabella Product con colonne id, name, quantity e unitPrice.
+- Inserire almeno 3 prodotti nel database
 - Scrivere delle query che eseguano le seguenti operazioni:
   - Ritornare nome e quantità di tutti i prodotti
   - Ritornare il prezzo totale di ogni prodotto (quantità X prezzo unitario)

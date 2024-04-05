@@ -2,14 +2,6 @@ DROP DATABASE IF EXISTS business;
 CREATE DATABASE IF NOT EXISTS business;
 USE business;
 
-CREATE TABLE Employee (
-  identifier CHAR(6) PRIMARY KEY NOT NULL,
-  first_name VARCHAR(45) NOT NULL,
-  projectId INT,
-
-  FOREIGN KEY (projectId) REFERENCES Project(id)
-);
-
 CREATE TABLE Department (
   identifier CHAR(3) PRIMARY KEY NOT NULL,
   name VARCHAR(45) NOT NULL,
@@ -23,6 +15,15 @@ CREATE TABLE Project (
   departmentId char(3),
   
   FOREIGN KEY (departmentId) REFERENCES Department(identifier)
+);
+
+
+CREATE TABLE Employee (
+  identifier CHAR(6) PRIMARY KEY NOT NULL,
+  first_name VARCHAR(45) NOT NULL,
+  projectId INT,
+
+  FOREIGN KEY (projectId) REFERENCES Project(id)
 );
 
 INSERT INTO Employee (identifier, first_name)

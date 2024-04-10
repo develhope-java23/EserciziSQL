@@ -1,0 +1,117 @@
+DROP DATABASE IF EXISTS business;
+CREATE DATABASE IF NOT EXISTS business;
+USE business;
+
+CREATE TABLE Department (
+  identifier CHAR(3) PRIMARY KEY NOT NULL,
+  name VARCHAR(45) NOT NULL,
+  budget INT NOT NULL
+);
+
+CREATE TABLE Project (
+  id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  name VARCHAR(45) NOT NULL,
+  cost INT NOT NULL,
+  departmentId char(3),
+
+  FOREIGN KEY (departmentId) REFERENCES Department(identifier)
+);
+
+
+CREATE TABLE Employee (
+  identifier CHAR(6) PRIMARY KEY NOT NULL,
+  first_name VARCHAR(45) NOT NULL,
+  projectId INT,
+
+  FOREIGN KEY (projectId) REFERENCES Project(id)
+);
+
+INSERT INTO Employee (identifier, first_name)
+VALUES ('001', 'Antonio'),
+        ('002', 'Roberto'),
+        ('003', 'Giovanni'),
+        ('004', 'Giorgio');
+
+INSERT INTO Department (identifier, name, budget)
+VALUES ('BCK', 'Backend', 50000),
+        ('FNT', 'Frontend', 35000);
+
+INSERT INTO Project (name, cost, departmentId)
+VALUES ('Calculator', 40000, 'BCK'),
+        ('Web Layout', 15000, 'FNT'),
+        ('Data analysis', 10000, 'BCK'),
+        ('Coding', 25000, 'BCK');
+
+
+-- Assegnare ogni impiegato ad un progetto qualsiasi fra quelli presenti nel database
+UPDATE Employee SET projectId = (SELECT id FROM Project ORDER BY RAND() LIMIT 1);
+
+-- Ritornare i dipartimenti per i quali la somma del costo dei progetti afferenti ad essi è superiore al loro budget
+SELECT d.identifier, d.name, d.budget, SUM(p.cost) AS total_project_cost
+FROM Department d
+JOIN Project p ON d.identifier = p.departmentId
+GROUP BY d.identifier
+HAVING total_project_cost > d.budget;
+
+-- Ritornare i progetti senza alcun impiegato assegnato
+SELECT *
+FROM Project
+WHERE id NOT IN (SELECT DISTINCT projectId FROM Employee WHERE projectId IS NOT NULL);
+
+-- Ritornare gli impiegati non assegnati a nessun progetto
+SELECT *
+FROM Employee
+WHERE projectId IS NULL;
+
+-- Verifica se la colonna paycheck esiste già nella tabella Employee
+SELECT *
+FROM information_schema.columns
+WHERE table_name = 'Employee' AND column_name = 'paycheck';
+
+-- Se la colonna paycheck non esiste, aggiungila
+ALTER TABLE Employee ADD COLUMN IF NOT EXISTS paycheck INT;
+
+-- Aggiorna i valori della colonna paycheck
+UPDATE Employee SET paycheck = (CASE
+                                    WHEN identifier = '001' THEN 4000
+                                    WHEN identifier = '002' THEN 3500
+                                    WHEN identifier = '003' THEN 3000
+                                    WHEN identifier = '004' THEN 3200
+                                END);
+
+-- Ritornare l'impiegato con lo stipendio minore
+SELECT *
+FROM Employee
+ORDER BY paycheck
+LIMIT 1;
+
+-- Ritornare per ogni progetto l'impiegato assegnato ad esso con lo stipendio più alto
+SELECT p.*, e.*
+FROM Project p
+LEFT JOIN Employee e ON p.id = e.projectId
+ORDER BY p.id, e.paycheck DESC
+LIMIT 1;
+
+-- Ritornare per ogni dipartimento l'impiegato assegnato ad un progetto afferente ad esso con lo stipendio più alto
+SELECT d.identifier, d.name, e.*
+FROM Department d
+JOIN Project p ON d.identifier = p.departmentId
+JOIN Employee e ON p.id = e.projectId
+GROUP BY d.identifier
+ORDER BY d.identifier, e.paycheck DESC
+LIMIT 1;
+
+-- Ritornare tutti i progetti il cui costo supera la somma degli stipendi degli impiegati assegnati
+SELECT p.*
+FROM Project p
+JOIN (SELECT projectId, SUM(paycheck) AS total_paycheck FROM Employee GROUP BY projectId) AS e
+ON p.id = e.projectId
+WHERE p.cost > total_paycheck;
+
+-- Ritorna tutti i dipartimenti per cui la somma dei costi dei progetti e degli stipendi totali degli impiegati assegnati ai progetti afferenti al dipartimento supera il budget
+SELECT d.identifier, d.name, d.budget, SUM(p.cost) AS total_project_cost, SUM(e.paycheck) AS total_paycheck
+FROM Department d
+JOIN Project p ON d.identifier = p.departmentId
+JOIN Employee e ON p.id = e.projectId
+GROUP BY d.identifier
+HAVING (SUM(p.cost) + SUM(e.paycheck)) > d.budget;

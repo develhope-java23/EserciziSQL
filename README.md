@@ -21,4 +21,9 @@
   - Ritornare per ogni dipartimento l'impiegato assegnato ad un progetto afferente ad esso con lo stipendio più alto
   - Ritornare tutti i progetti il cui costo supera la somma degli stipendi degli impiegati assegnati
   - Ritorna tutti i dipartimenti per cui la somma dei costi dei progetti e degli stipendi totali degli impiegati assegnati ai progetti afferenti al dipartimento supera il budget
+- Aggiungere allo schema precedente una colonna "managerIdentifier" alla tabella Employee, che rappresenta l'identificatore di un altro impiegato che è il manager dell'impiegato in questione. Scrivere poi le seguenti query:
+  - Ritornare per ogni impiegato il nome del suo manager
+  - Ritornare tutti gli impiegati che sono manager di almeno un altro impiegato
+  - Ritornare tutti gli impiegati che sono manager di più di un impiegato
+  - Ritornare l'impiegato che è manager del massimo numero di impiegati
 

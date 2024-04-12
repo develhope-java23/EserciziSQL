@@ -27,3 +27,7 @@
   - Ritornare tutti gli impiegati che sono manager di più di un impiegato
   - Ritornare l'impiegato che è manager del massimo numero di impiegati
   - Ritornare tutti gli impiegati che sono sia manager di qualcuno sia hanno un manager assegnato
+  - Ritornare tutti i progetti a cui è assegnato almeno un manager
+  - Ritornare tutti gli impiegati il cui manager è assegnato ad un progetto diverso dal loro
+  - Ritornare tutti i progetti a cui non è assegnato alcun manager
+  - Ritornare tutti i progetti a cui è assegnato più di un manager

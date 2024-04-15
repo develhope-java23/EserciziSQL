@@ -31,3 +31,29 @@
   - Ritornare tutti gli impiegati il cui manager è assegnato ad un progetto diverso dal loro
   - Ritornare tutti i progetti a cui non è assegnato alcun manager
   - Ritornare tutti i progetti a cui è assegnato più di un manager
+ 
+## Esercizio 3
+Dato il seguente schema:
+
+```
+Person (
+  taxCode VARCHAR(255) PRIMARY KEY,
+  firstName VARCHAR(64),
+  lastName VARCHAR(64),
+  age INTEGER,
+)
+
+Cat(
+  microchipCode VARCHAR(255) PRIMARY KEY,
+  fullName VARCHAR(64),
+  nickname VARCHAR(64),
+  age INTEGER,
+  ownerTaxCode VARCHAR(255) FOREIGN KEY Person(taxCode)
+)
+```
+
+Scrivere le seguenti query:
+- Ritornare il numero di gatti posseduti da ogni persona, riportandone nome e cognome
+- Ritornare il numero di persone con più di 60 anni ed almeno due gatti
+- Ritornare il numero di gatti il cui nome (fullName) contiene il cognome (lastName) del padrone
+
